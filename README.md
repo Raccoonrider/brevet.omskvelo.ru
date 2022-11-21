@@ -12,16 +12,28 @@ https://brevet.omskvelo.ru
 ### Стек
 Python | Django | Bootstrap | PostgreSQL | Gunicorn | Nginx | Docker
 
-### Запуск
-#### Поднять контейнеры
-`docker-compose up -d --build`
+### Deployment "с чистого листа"
+1. Создать пользователя
+```
+adduser brevet
+usermod -aG sudo brevet
+su brevet
+```
 
-#### Загрузить дамп
+2. Сгенерировать SHH-ключ (у себя)
 ```
-docker exec -it brevetomskveloru-web-1 sh
-cd /home/brevet/web/brevet
-python manage.py loaddata data.json
+
 ```
+
+3. Установить Nginx, Docker, Git
+```
+sudo apt-get install docker
+sudo usermod -aG docker brevet
+sudo apt-get install nginx
+sudo apt-get install git
+```
+
+
 
 ### .gitignore
 В исходный код не вошли необходимые для работы файлы:
