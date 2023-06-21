@@ -180,7 +180,7 @@ def statistics(request, year='', form="html"):
             number %= 100
             if number in range(11, 21): return cases[2]
             if number%10 == 1: return cases[0]
-            if number%10 in range(1, 6): return cases[1]
+            if number%10  < 5: return cases[1]
             return cases[2]
 
         total_randonneurs_text = f"{make_plural(['рандоннёр','рандоннёра','рандоннёров'], stats.data['total_randonneurs'])} {make_plural(['принял','приняли','приняли'], stats.data['total_randonneurs'])} участие"
