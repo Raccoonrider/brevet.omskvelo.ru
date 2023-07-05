@@ -30,5 +30,6 @@ urlpatterns = [
     path('users/', include ('users.urls')),
     path('hosting/', include('hosting_manager.urls')),
     path('admin/', admin.site.urls),
+    path('loaderio-<str:token>/', views.loaderio),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
