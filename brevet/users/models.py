@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 
 from brevet_database.models import Randonneur
-from .managers import CustomUserManager
+from .managers import UserManager
 
 class User(AbstractUser):
     username = None
@@ -18,7 +18,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    objects = CustomUserManager()
+    objects = UserManager()
     ordering = ('email',)
 
     def __str__(self):
@@ -39,3 +39,5 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'auth_user'
+        verbose_name_plural = 'Пользователи'
+        verbose_name = 'Пользователь'

@@ -18,13 +18,6 @@ SITE_ID = 2
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
-    'brevet',
-    'brevet_database',
-    'search',
-    'hosting_manager',
-    'inventory',
-    'phonenumber_field',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,6 +26,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     "debug_toolbar",
+    'brevet',
+    'users',
+    'brevet_database',
+    'search',
+    'hosting_manager',
+    'inventory',
+    'phonenumber_field',
 ]
 
 CACHES = {

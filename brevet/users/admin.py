@@ -1,13 +1,19 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from django.http import HttpResponseRedirect
 
-from .models import User
+from users.models import User
+from users.forms import SignUpForm
 
-class UserAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['randonneur']
-    search_fields = ['first_name', 'last_name']
+@admin.register(User)
+class CustomUserAdmin(admin.ModelAdmin):
+    model = User
+    add_form = SignUpForm
+    autocomplete_fields = ('randonneur',)
+    search_fields = ('first_name', 'last_name')
     change_form_template = 'admin/change_user.html'
+    list_display = ('get_display_name','phone_number','oauth',)
+    exclude = ('groups','user_permissions', 'is_staff')
+    ordering = ('last_name', 'first_name')
 
     def response_change(self, request, obj):
         if "_generate-randonneur" in request.POST:
@@ -21,6 +27,3 @@ class UserAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(".")
 
         return super().response_change(request, obj)
-
-
-admin.site.register(User, UserAdmin)

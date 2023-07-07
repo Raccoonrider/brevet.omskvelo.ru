@@ -174,6 +174,9 @@ class Randonneur(AbstractModel):
 
     def __str__(self):
         return f"{self.russian_surname} {self.russian_name}"
+    
+    def translit(self):
+        return f"{self.surname} {self.name}"
 
 
 class PersonalStatsChart(AbstractModel):
@@ -446,7 +449,7 @@ class Event(AbstractModel):
         return Application.objects.filter(event=self, otl=True, active=True).count()    
 
     def is_homologated(self):
-        results = list(Result.objects.filter(event=self))
+        results = Result.objects.filter(event=self)
         for result in results:
             if result.homologation == "":
                 return False

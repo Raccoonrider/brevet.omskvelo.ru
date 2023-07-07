@@ -1,29 +1,20 @@
 import re
+from typing import Any, List, Tuple
 
 from django.contrib import admin
 from django import forms
 from django.http import HttpResponseRedirect
 
-from .models import *
+from brevet_database.models import Club, Randonneur, Result, Event, Route, Application, PaymentInfo
+from brevet_database.forms import AdminResultForm
 
 result_pattern = re.compile("^\d\d\:\d\d$")
 
-class AdminResultForm(forms.ModelForm):
-    def __init__(self, data=None, *args, **kwargs):
-        if data:
-            data = data.copy()
-            data['time'] = data['time'].strip()
-            if result_pattern.match(data['time']):
-                data['time'] += ":00"
-        super().__init__(data, *args, **kwargs)
-
-    class Meta:
-        model = Randonneur
-        exclude = []
-
+@admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
+    model = Result
     form = AdminResultForm
-    autocomplete_fields = ['randonneur']
+    autocomplete_fields = ('randonneur',)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -32,9 +23,14 @@ class ResultAdmin(admin.ModelAdmin):
             form.base_fields['event'].initial = default_event
         return form        
 
+@admin.register(Randonneur)
 class RandonneurAdmin(admin.ModelAdmin):
-    search_fields = ['russian_surname', 'russian_name']
+    search_fields = ('russian_surname', 'russian_name')
+    readonly_fields = ('sr', 'total_distance', 'total_brevets')
     change_form_template = 'admin/change_randonneur.html'
+    list_display = ('__str__', 'translit')
+    list_filter = ('female', 'club',)
+    ordering = ('surname', 'name')
 
     def response_change(self, request, obj):
         if "_update_stats" in request.POST:
@@ -47,19 +43,64 @@ class RandonneurAdmin(admin.ModelAdmin):
 
         return super().response_change(request, obj)
 
+@admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
+    model = Application
     raw_id_fields = ['result']
     autocomplete_fields = ['user', 'event']
+    search_fields = ('user', 'event__route')
+    list_display = ('user__name', 'event', 'active')
+    list_filter = ('active', 'dnf', 'dns', 'dsq', 'otl', 'payment')
 
+    @admin.display(description='Пользователь')
+    def user__name(self, instance:Application):
+        return f"{instance.user.last_name} {instance.user.first_name}"
+
+class DistanceAdminFilter(admin.SimpleListFilter):
+    title = 'Дистанция'
+    parameter_name = 'distance'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('200', '200'),
+            ('300', '300'),
+            ('400', '400'),
+            ('600', '600'),
+            ('1000','1000'),
+        ]
+    
+    def queryset(self, request, queryset):
+        if self.value() is not None:
+            if queryset.model is Route:
+                return queryset.filter(distance=int(self.value()))
+            if queryset.model is Event:
+                return queryset.filter(route__distance=int(self.value()))
+
+        return queryset
+
+@admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    search_fields = ['route__name']
+    model = Event
+    search_fields = ('route__name',)
+    list_display = ('route__name', 'distance', 'date', 'finished',)
+    list_filter = (DistanceAdminFilter,)
+    ordering = ('-date',)
+
+    @admin.display(description='Дистанция')
+    def distance(self, instance:Event):
+        return instance.route.distance
+    
+    @admin.display(description='Маршрут')
+    def route__name(self, instance:Event):
+        return instance.route.name
+
+@admin.register(Route)
+class RouteAdmin(admin.ModelAdmin):
+    # model = Route
+    search_fields = ('name','distance')
+    list_display = ('name', 'distance')
+    list_filter = (DistanceAdminFilter, 'brm', 'lrm', 'fleche', 'sr600')
+
 
 admin.site.register(Club)
-admin.site.register(Randonneur, RandonneurAdmin)
-admin.site.register(Route)
-admin.site.register(Event, EventAdmin)
-admin.site.register(Result, ResultAdmin)
-admin.site.register(Application, ApplicationAdmin)
 admin.site.register(PaymentInfo)
-admin.site.register(ClubStatsCache)
-admin.site.register(PersonalStatsChart)

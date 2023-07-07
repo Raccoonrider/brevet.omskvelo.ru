@@ -2,6 +2,8 @@ import re
 
 from django import forms
 
+from brevet_database.models import Randonneur
+
 result_pattern = re.compile("^(\d{1,2})[^\d]?(\d{2})$")
 
 class ProtocolUploadForm(forms.Form):
@@ -43,3 +45,16 @@ class AddResultTimeForm(forms.Form):
                 data['result'] = result_match.group(1) + ":" + result_match.group(2) + ":00"
 
         super().__init__(data, *args, **kwargs)
+
+class AdminResultForm(forms.ModelForm):
+    def __init__(self, data=None, *args, **kwargs):
+        if data:
+            data = data.copy()
+            data['time'] = data['time'].strip()
+            if result_pattern.match(data['time']):
+                data['time'] += ":00"
+        super().__init__(data, *args, **kwargs)
+
+    class Meta:
+        model = Randonneur
+        exclude = []
