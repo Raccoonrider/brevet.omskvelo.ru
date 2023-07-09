@@ -17,6 +17,7 @@ RUN apk add zlib-dev jpeg-dev gcc musl-dev
 
 # Install tools
 RUN apk add nano
+RUN apk add supercronic shadow
 
 # Install dependencies
 RUN pip install --upgrade pip
@@ -25,13 +26,9 @@ COPY Pipfile .
 COPY Pipfile.lock .
 RUN pipenv install --deploy --system
 
-# Install cron jobs
-COPY crontab .
-RUN chmod 0644 crontab
-RUN apk add supercronic shadow
-
 # Install application
 COPY . /home
+RUN chmod 0644 crontab
 
 # Create user and set ownership
 RUN addgroup -S  brevet 
