@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import xlrd
-
+import openpyxl
 
 def read_xls_protocol(file):
     """Reads *.xls file returned by ACP"""
@@ -64,6 +64,54 @@ def read_xls_protocol(file):
 
             row +=1 
             book.release_resources()
+
+            
+    except Exception as e:
+        exception = str(e)
+
+    return content, exception
+
+
+def read_xlsx_protocol(file):
+    """Reads *.xlsx file returned by ACP"""
+    exception = None
+    content = {}
+    try:
+        book = openpyxl.load_workbook(filename=file, read_only=True)
+        sheet = book.worksheets[0]
+
+        date = sheet['F2'].value
+        distance = sheet['G2'].value
+        code = sheet['E2'].value
+
+        content["date"] = datetime.strptime(date, "%d/%m/%Y").date()
+        content["distance"] = int(''.join(x for x in distance if x.isdigit()))
+        content["code"] = int("".join(x for x in code.split(".")[0] if x.isdigit()))
+        content["results"] = []
+
+        for row in sheet.iter_rows(min_row=4, values_only=True):
+
+            # Read data
+            homologation = str(row[0]).strip()
+            surname = row[1].title()
+            name = row[2].title()
+            code = int("".join(x for x in row[5] if x.isdigit()))
+            h,m = row[6].split(":")
+            time = timedelta(hours=int(h), minutes=int(m))
+            medal = row[7] != ""
+            female = row[8] != ""            
+            
+            content["results"].append(
+                {
+                    'homologation' : homologation,
+                    'surname' : surname,
+                    'name' : name,
+                    'code' : code,
+                    'time' : time,
+                    'medal' : medal,
+                    'female' : female,
+                }
+            )
 
             
     except Exception as e:

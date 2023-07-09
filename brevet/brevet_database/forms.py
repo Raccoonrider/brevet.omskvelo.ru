@@ -7,7 +7,7 @@ from brevet_database.models import Randonneur
 result_pattern = re.compile("^(\d{1,2})[^\d]?(\d{2})$")
 
 class ProtocolUploadForm(forms.Form):
-    xls = forms.FileField(label="*.xls")
+    xls = forms.FileField(label="*.xls | *.xlsx")
 
 
 class AddResultForm(forms.Form):

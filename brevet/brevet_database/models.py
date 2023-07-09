@@ -458,7 +458,9 @@ class Event(AbstractModel):
     def update_protocol_from_xls(self,file):
         results = list(Result.objects.filter(event=self))
         content, exception = file_processors.read_xls_protocol(file)
-        
+        if exception:
+            content, exception = file_processors.read_xlsx_protocol(file)
+
         if not exception:
             if (content["date"] == self.date 
                 and content["distance"] == self.route.distance 

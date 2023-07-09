@@ -42,7 +42,7 @@ def protocol(request, event_id, upload_success=None, form="html"):
         if request.method == 'POST':
             form = ProtocolUploadForm(request.POST, request.FILES)
             if form.is_valid():
-                upload_status, upload_exception = event.update_protocol_from_xls(request.FILES['xls'])
+                upload_status, upload_exception = event.update_protocol_from_xls(request.FILES['xls'])         
                 if upload_status:
                     return redirect(event.get_protocol_upload_success_url())
         else:

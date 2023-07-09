@@ -25,13 +25,13 @@ COPY Pipfile .
 COPY Pipfile.lock .
 RUN pipenv install --deploy --system
 
-# Install application
-COPY . /home
-
 # Install cron jobs
 COPY crontab .
 RUN chmod 0644 crontab
 RUN apk add supercronic shadow
+
+# Install application
+COPY . /home
 
 # Create user and set ownership
 RUN addgroup -S  brevet 
