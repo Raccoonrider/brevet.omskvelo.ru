@@ -90,6 +90,8 @@ def read_xlsx_protocol(file):
         content["results"] = []
 
         for row in sheet.iter_rows(min_row=4, values_only=True):
+            if row[1] is None:
+                break
 
             # Read data
             homologation = str(row[0]).strip()
@@ -98,8 +100,8 @@ def read_xlsx_protocol(file):
             code = int("".join(x for x in row[5] if x.isdigit()))
             h,m = row[6].split(":")
             time = timedelta(hours=int(h), minutes=int(m))
-            medal = row[7] != ""
-            female = row[8] != ""            
+            medal = row[7] is not None
+            female = row[8] is not None            
             
             content["results"].append(
                 {
