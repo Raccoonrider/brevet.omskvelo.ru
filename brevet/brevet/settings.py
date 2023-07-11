@@ -156,6 +156,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SESSION_COOKIE_SECURE = False
 SECURE_SSL_REDIRECT = False
 CSRF_COOKIE_SECURE = False
+CSRF_FAILURE_VIEW = 'brevet.views.csrf_failure'
 CSRF_TRUSTED_ORIGINS = ['http://localhost',
                         'https://brevet.omskvelo.ru']
 
