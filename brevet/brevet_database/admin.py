@@ -15,6 +15,20 @@ class ResultAdmin(admin.ModelAdmin):
     model = Result
     form = AdminResultForm
     autocomplete_fields = ('randonneur',)
+    list_display = ('get_route', 'get_date', 'randonneur', 'get_time', 'homologation', 'medal')
+
+    @admin.display(description='Маршрут')
+    def get_route(self, instance:Result):
+        return str(instance.event.route)
+    
+    @admin.display(description='Время')
+    def get_time(self, instance:Result):
+        return str(instance.get_time())
+    
+    @admin.display(description='Дата')
+    def get_date(self, instance:Result):
+        return str(instance.get_date())
+
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

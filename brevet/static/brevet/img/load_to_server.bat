@@ -1,2 +1,2 @@
-scp * brevet@brevet.omskvelo.ru:/srv/brevet.omskvelo.ru/brevet/static/brevet/img/
+scp * brevet@brevet.omskvelo.ru:/home/brevet/brevet/static/brevet/img/
 pause
