@@ -497,10 +497,14 @@ class Event(AbstractModel):
         return [x for x in self.text.split("\n") if x]
     
     def ready_to_finalize(self):
+        if not self.started():
+            return False
+        if self.finished:
+            return False
         applications = Application.objects.filter(event=self)
-        if applications:
-            return all(application.is_final() for application in applications)
-        return True
+        if not applications:
+            return True
+        return all(application.is_final() for application in applications)
     
     def get_finalize_url(self):
         return reverse('event_finalize', kwargs={'event_id' : self.pk})
