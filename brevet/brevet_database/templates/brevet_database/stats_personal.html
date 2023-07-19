@@ -52,7 +52,7 @@
                     <tr>
                         <th>№</th>
                         <th>Дистанция</th>
-                        <th>Дата</th>
+                        <th class="data-sort">Дата</th>
                         <th>Бревет</th>
                         <th>
                             <span class="d-none d-lg-block">
@@ -67,7 +67,7 @@
                         <tr>
                             <td>{{ result.homologation }}</td> 
                             <td>{{ result.event.route.distance }} км </td>
-                            <td>{{ result.get_date }}</td>
+                            <td data-sort="{{ result.event.date.isoformat }}">{{ result.get_date }}</td>
                             <td>
                                 <a href = "{{ result.event.get_absolute_url }}">
                                     {{ result.event.route.name }}
@@ -87,7 +87,7 @@
                 <thead>
                     <tr>
                         <th>№</th>
-                        <th>Дата</th>
+                        <th class="data-sort">Дата</th>
                         <th>Бревет</th>
                         <th>Время</th>
                     </tr>
@@ -96,7 +96,7 @@
                     {% for result in elite_dist %}
                         <tr>
                             <td>{{ result.homologation }}</td> 
-                            <td>{{ result.get_date }}</td>
+                            <td data-sort="{{ result.event.date.isoformat }}">{{ result.get_date }}</td>
                             <td>
                                 <a href = "{{ result.event.get_absolute_url }}">
                                     {{ result.event.route.distance }} км 
@@ -284,7 +284,7 @@
                 <tr>
                     <th>№</th>
                     <th>Дистанция</th>
-                    <th>Дата</th>
+                    <th class="data-sort">Дата</th>
                     <th>Бревет</th>
                     <th>
                         <span class="d-none d-lg-block">
@@ -305,7 +305,7 @@
                                 {{ result.event.route.distance }} км 
                             {% endif %}
                         </td>
-                        <td>{{ result.get_date }}</td>
+                        <td data-sort="{{ result.event.date.isoformat }}">{{ result.get_date }}</td>
                         <td>
                             <a href = "{{ result.event.get_absolute_url }}">
                                 {{ result.event.route.name }}
@@ -325,7 +325,7 @@
             <thead>
                 <tr>
                     <th>№</th>
-                    <th>Дата</th>
+                    <th class="data-sort">Дата</th>
                     <th>Бревет</th>
                     <th>Время</th>
                 </tr>
@@ -334,7 +334,7 @@
                 {% for result in results %}
                     <tr>
                         <td>{{ result.homologation }}</td>
-                        <td>{{ result.get_date }}</td>
+                        <td data-sort="{{ result.event.date.isoformat }}">{{ result.get_date }}</td>
                         <td>
                             <a href = "{{ result.event.get_absolute_url }}">
                                 {{ result.event.route.distance }} км 

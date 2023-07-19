@@ -33,7 +33,7 @@
                 <thead>
                     <tr>
                         <th>Рандоннёр</th>
-                        <th>Дата</th>
+                        <th class="data-sort">Дата</th>
                         <th>Время</th>
                         <th>
                             <div class="d-none d-md-block">
@@ -50,7 +50,7 @@
                                     {{ result.randonneur }}
                                 </a>
                             </td>
-                            <td>
+                            <td data-sort="{{ result.event.date.isoformat }}" >
                                 <a href = "{{ result.event.get_protocol_url }}">
                                     {{ result.get_date }}
                                 </a>

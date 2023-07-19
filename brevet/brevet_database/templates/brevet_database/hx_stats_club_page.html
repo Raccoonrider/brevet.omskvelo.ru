@@ -82,7 +82,7 @@
             <thead>
                 <tr>
                     <th>Рандоннёр</th>
-                    <th>
+                    <th class="data-sort">
                         <span class="d-none d-lg-block">
                             Дата
                         </span>
@@ -100,7 +100,7 @@
                                 {{ result.randonneur }}
                             </a>
                         </td>
-                        <td>
+                        <td data-sort="{{ result.event.date.isoformat }}">
                             <span class="d-none d-lg-block">
                                 {{ result.get_date }}
                             </span>
@@ -120,7 +120,7 @@
             <thead>
                 <tr>
                     <th>Рандоннёр</th>
-                    <th>Бревет</th>
+                    <th class="data-sort">Бревет</th>
                     <th>Результат</th>
                 </tr>
             </thead>
@@ -132,7 +132,7 @@
                                 {{ result.randonneur }}
                             </a>
                         </td>
-                        <td>
+                        <td data-sort="{{ result.event.date.isoformat }}">
                             <a href = "{{ result.event.get_absolute_url }}">
                                 {{ result.event.route.distance }} км 
                                 <small>

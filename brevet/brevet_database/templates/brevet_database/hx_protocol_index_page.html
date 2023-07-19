@@ -21,7 +21,7 @@
     <table class="table table-striped table-hover table-sort">
         <thead>
             <tr>
-                <th>Дата</th>
+                <th class="data-sort">Дата</th>
                 <th>Протокол</th>
                 <th><div class="d-none d-sm-block">Маршрут</div></th>
                 <th></th>
@@ -30,7 +30,7 @@
         <tbody>
             {% for event in events %}
                 <tr style="vertical-align: middle;">
-                    <td>
+                    <td data-sort="{{ event.date.isoformat }}">
                         {{ event.get_date }}
                     </td>
                     <td> 
