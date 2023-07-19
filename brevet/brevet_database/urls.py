@@ -11,6 +11,7 @@ urlpatterns = [
     path("event/<int:event_id>/register", views.event_register, name="event_register"),
     path("event/<int:event_id>/cancel_registration", views.event_cancel_registration, name="event_cancel_registration"),
     path("event/<int:event_id>/dnf", views.event_dnf, name="event_dnf"),
+    path("event/<int:event_id>/finalize", views.event_finalize, name="event_finalize"),
     path("hx/event/<int:event_id>/participants/", views.hx_event_load_participants, name="hx_event_load_participants"),
     path("hx/event/<int:event_id>/participants/apply", views.hx_event_create_application, name="hx_event_create_application"),
     path("hx/event/<int:event_id>/participants/cancel", views.hx_event_delete_application, name="hx_event_delete_application"),

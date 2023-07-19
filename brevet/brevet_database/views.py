@@ -557,6 +557,14 @@ def event_dnf(request, event_id=None, distance=None, date=None):
     return redirect(request.META.get('HTTP_REFERER'))
 
 @never_cache
+def event_finalize(request, event_id=None):
+    event = get_object_or_404(Event, pk=event_id)
+    assert event.ready_to_finalize()
+    event.finished = True
+    event.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+    
+@never_cache
 def event_index(request):
     events = Event.objects.filter(club=DEFAULT_CLUB_ID, finished=False).order_by("date")
 

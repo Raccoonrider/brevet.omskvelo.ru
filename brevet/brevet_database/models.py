@@ -495,6 +495,15 @@ class Event(AbstractModel):
     
     def get_text(self):
         return [x for x in self.text.split("\n") if x]
+    
+    def ready_to_finalize(self):
+        applications = Application.objects.filter(event=self)
+        if applications:
+            return all(application.is_final() for application in applications)
+        return True
+    
+    def get_finalize_url(self):
+        return reverse('event_finalize', kwargs={'event_id' : self.pk})
 
     def __str__(self):
         club = f" {self.club}" if self.club.id != DEFAULT_CLUB_ID else ""
@@ -572,6 +581,18 @@ class Application(AbstractModel):
     class Meta:
         verbose_name = "Заявка"
         verbose_name_plural = "Заявки"
+
+    def is_final(self):
+        return any(
+            [
+                self.dnf,
+                self.dns,
+                self.dsq,
+                self.otl,
+                self.result,
+                not self.active,
+            ]
+        )
 
     def __str__(self):
         active_str = "" if self.active else "(Удалена)"
