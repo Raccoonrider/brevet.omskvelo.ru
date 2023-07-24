@@ -36,17 +36,12 @@ class Medal(AbstractModel):
         verbose_name = "Медаль"
         verbose_name_plural = "Медали"
         ordering = ['-active', '-removed', '-event__date']
-
+        
     def __str__(self):
         distance = self.event.route.distance
-        created = self.created.strftime("%d.%m.%Y")
         randonneur = f"{self.randonneur.russian_surname} {self.randonneur.russian_name}" if self.randonneur else "(ничья)"
-        removed = "(Вручена)" if self.removed else ""
-        paid = "(Не оплачена)" if not self.payment else ''
-        ordered = "(Не заказана)" if not self.ordered else ''
-        received = "(Не получена)" if not self.received else ''
 
-        return f"{ordered}{paid}{received}{removed} Медаль {distance} - {randonneur} - {created}"
+        return f"Медаль {distance} - {randonneur}"
 
 
 @receiver(models.signals.post_save, sender=Event)

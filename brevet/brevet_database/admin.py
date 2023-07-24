@@ -1,8 +1,6 @@
 import re
-from typing import Any, List, Tuple
 
 from django.contrib import admin
-from django import forms
 from django.http import HttpResponseRedirect
 
 from brevet_database.models import Club, Randonneur, Result, Event, Route, Application, PaymentInfo
