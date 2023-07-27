@@ -13,6 +13,7 @@ from .models import *
 from .forms import *
 from . import file_generators
 from inventory.models import Price
+from invisionboard_integration.producers import PostEventProducer
 
 TIME_LIMITS = {
     200 : timedelta(hours=13, minutes=30),
@@ -562,6 +563,7 @@ def event_finalize(request, event_id=None):
     assert event.ready_to_finalize()
     event.finished = True
     event.save()
+    PostEventProducer().post_event_results(event)
     return redirect(request.META.get('HTTP_REFERER'))
     
 @never_cache

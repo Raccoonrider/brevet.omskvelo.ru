@@ -1,0 +1,27 @@
+<h4>Результаты бревета {{ event.route.distance }} км "{{ event.route.name }}"</h4>
+
+<table cellpadding="6">
+    <thead>
+        <tr>
+            <th>Рандоннёр</th>
+            <th>Время</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+            <tr>
+                <td>
+                    <a href="https://{{ site }}{{ result.randonneur.get_absolute_url }}">
+                        {{ result.randonneur }}
+                    </a>
+                </td>
+                <td>{{ result.get_time }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p>
+    <a href="https://{{ site }}{{ event.get_protocol_url }}">Протокол</a>
+</p>
+

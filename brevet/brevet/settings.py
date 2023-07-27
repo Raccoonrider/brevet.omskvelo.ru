@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'search',
     'hosting_manager',
     'inventory',
+    'invisionboard_integration',
     'phonenumber_field',
 ]
 
