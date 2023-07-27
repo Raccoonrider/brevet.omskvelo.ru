@@ -1,4 +1,4 @@
-<h4>Результаты бревета {{ event.route.distance }} км "{{ event.route.name }}"</h4>
+<h4><a href="https://{{ site }}{{ event.get_protocol_url }}">Результаты бревета {{ event.route.distance }} км "{{ event.route.name }}"</a></h4>
 
 <table cellpadding="6">
     <thead>
@@ -20,8 +20,3 @@
         {% endfor %}
     </tbody>
 </table>
-
-<p>
-    <a href="https://{{ site }}{{ event.get_protocol_url }}">Протокол</a>
-</p>
-
