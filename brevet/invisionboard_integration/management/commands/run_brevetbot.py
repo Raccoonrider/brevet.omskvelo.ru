@@ -2,7 +2,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from producers import PostEventProducer
+from invisionboard_integration.producers import PostEventProducer
 
 class Command(BaseCommand):
     producer = PostEventProducer()
