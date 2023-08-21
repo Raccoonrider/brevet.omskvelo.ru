@@ -11,5 +11,38 @@
 
 {% block content %}
     <h1 class="only-print">Статистика клуба</h1>
+
+    {% if years %}
+        <div class="py-4">
+            {% for y in years %}
+                <a class="btn btn-light me-1 mb-1 btn-year" 
+                    id="btn-year-{{y}}"
+                    hx-get="{% url 'hx_statistics' y %}"
+                    hx-target="#hx-stats-page"
+                    hx-swap="outerHTML"
+                    hx-push-url="{% url 'statistics' y %}"
+                    href="{% url 'statistics' y %}"
+                    >
+                    {{ y }}
+                </a>
+            {% endfor %}   
+            <a class="btn btn-light me-1 mb-1 btn-year"
+                id="btn-year-all"
+                hx-get="{% url 'hx_statistics_total' %}"
+                hx-target="#hx-stats-page"
+                hx-swap="outerHTML"
+                hx-push-url="{% url 'statistics_total' %}"
+                href="{% url 'statistics_total' %}"
+                >
+                {{ year_min_to_max }}
+            </a>     
+        </div>
+    {% endif %}
+    
+    <div id="container-stats-club" class="container-chart no-print">
+        <canvas id="chart-stats-club"></canvas>
+    </div>
+
     {% include 'brevet_database/hx_stats_club_page.html' %}
+
 {% endblock %}

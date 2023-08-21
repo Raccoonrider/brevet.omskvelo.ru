@@ -1,41 +1,10 @@
 {% load static %}
 <div id="hx-stats-page">
-    {% if years %}
-        <div class="py-4">
-            {% for y in years %}
-                {% if year == y %}
-                <a class="btn btn-dark me-1 mb-1">
-                    {{ y }}
-                </a>
-                {% else %}
-                <a class="btn btn-light me-1 mb-1" 
-                   hx-get="{% url 'hx_statistics' y %}"
-                   hx-target="#hx-stats-page"
-                   hx-swap="outerHTML"
-                   hx-push-url="{% url 'statistics' y %}"
-                   href="{% url 'statistics' y %}"
-                   >
-                    {{ y }}
-                </a>
-                {% endif %}
-            {% endfor %}   
-            {% if year %}
-                <a class="btn btn-light me-1 mb-1"
-                    hx-get="{% url 'hx_statistics_total' %}"
-                    hx-target="#hx-stats-page"
-                    hx-swap="outerHTML"
-                    hx-push-url="{% url 'statistics_total' %}"
-                    href="{% url 'statistics_total' %}"
-                    >
-                    {{ year_min_to_max }}
-                </a>     
-            {% else %}   
-                <a class="btn btn-dark me-1 mb-1">
-                    {{ year_min_to_max }}
-                </a>    
-            {% endif %} 
-        </div>
+    {% if chart_distance %}
+        {{ chart_distance|json_script:"chart_distance"}}
+        {{ chart_colors|json_script:"chart_colors"}}
     {% endif %}
+    <script id="metadata" type="application/json">{"year": "{{ year }}"}</script>
 
     {% if year %}
     <h4 class="my-4">
@@ -50,13 +19,6 @@
     <h5>
        Общая дистанция:  <strong>{{ total_distance }} км</strong>
     </h5>
-    {% if chart_distance %}
-    <div id="container-stats-club" class="container-chart no-print">
-        {{ chart_distance|json_script:"chart_distance"}}
-        {{ chart_colors|json_script:"chart_colors"}}
-        <canvas id="chart-stats-club"></canvas>
-    </div>
-    {% endif %}
     
     <h5 class="my-4">
         <strong>{{ total_randonneurs }}</strong> {{ total_randonneurs_text }}{% if total_sr %}, из них <strong>{{ sr|length }}</strong> {{ total_sr_text }} норматив "Суперрандоннёр":{% else %}.{% endif %}

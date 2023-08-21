@@ -1,65 +1,82 @@
-function make_chart(){
-  const canvas = document.getElementById('chart-stats-club')
-  const chart_distance = JSON.parse(document.getElementById('chart_distance').textContent)
-  const chart_colors = JSON.parse(document.getElementById('chart_colors').textContent)
+const page_buttons = document.querySelectorAll('.btn-year')
+const canvas = document.getElementById('chart-stats-club')
+let chart_distance = JSON.parse(document.getElementById('chart_distance').textContent)
+let chart_colors = JSON.parse(document.getElementById('chart_colors').textContent)
 
-  Chart.register(ChartDataLabels)
-  
-  let new_chart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: chart_distance.map(row => row.y),
-      datasets: [
-        {
-          data: chart_distance,
-          backgroundColor: chart_colors,
-          datalabels: {
-            display: true,
-            color: "#1d3652",
-          }
-        },
-      ]
-    },
-    options: {
-      indexAxis: 'y',
-      plugins: {
-        legend: {
-          display: false
-        },
-      },
-      scales: {
-        x: {
-          stacked: true,
-        },
-        y: {
-          stacked: true,
+Chart.register(ChartDataLabels)
+
+let chart = new Chart(canvas, {
+  type: 'bar',
+  data: {
+    labels: chart_distance.map(row => row.y),
+    datasets: [
+      {
+        data: chart_distance,
+        backgroundColor: chart_colors,
+        datalabels: {
+          display: true,
+          color: "#1d3652",
         }
       },
-      maintainAspectRatio: true,
-      responsive: true,
-      animations: false,
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: {
+        display: false
+      },
     },
     scales: {
       x: {
-        type: 'linear',
+        stacked: true,
       },
       y: {
-        type: 'linear',
+        stacked: true,
       }
+    },
+    maintainAspectRatio: true,
+    responsive: true,
+    animations: false,
+  },
+  scales: {
+    x: {
+      type: 'linear',
+    },
+    y: {
+      type: 'linear',
     }
-  })
-  return new_chart
-}
-
-let chart = make_chart()
-
-const redraw_path = /^\/database\/hx\/stats\/club\/(?:\d{4})|(?:total)$/
-
-function redraw(event){
-  if (redraw_path.test(event.detail.pathInfo.requestPath)){
-    chart.destroy()
-    chart = make_chart()
   }
+})
+
+function update_chart(){
+  chart_distance = JSON.parse(document.getElementById('chart_distance').textContent)
+  chart_colors = JSON.parse(document.getElementById('chart_colors').textContent)
+  chart.data.datasets[0].backgroundColor = chart_colors
+  chart.update()
 }
 
-document.addEventListener('htmx:afterSwap', redraw)
+function update_button_styles(){
+  let metadata = JSON.parse(document.getElementById('metadata').textContent)
+
+  for (let i=0; i < page_buttons.length; i++){
+    page_buttons[i].classList.replace("btn-dark", "btn-light")
+  }
+
+  let target_id = "btn-year-"
+  if (metadata['year'] === "None"){
+    target_id += "all"
+  } else {
+    target_id += metadata.year
+  }
+  document.getElementById(target_id).classList.replace("btn-light", "btn-dark")
+}
+
+function update_all(){
+  update_button_styles()
+  update_chart()
+}
+
+document.addEventListener('htmx:afterSwap', update_all)
+
+update_button_styles()
