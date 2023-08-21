@@ -2,6 +2,9 @@ const page_buttons = document.querySelectorAll('.btn-year')
 const canvas = document.getElementById('chart-stats-club')
 let chart_distance = JSON.parse(document.getElementById('chart_distance').textContent)
 let chart_colors = JSON.parse(document.getElementById('chart_colors').textContent)
+const canvasContainer = document.getElementById('container-stats-club')
+
+canvasContainer.setAttribute("style",`height: ${chart_distance.length * 40 + 50}px;`)
 
 Chart.register(ChartDataLabels)
 
@@ -35,9 +38,8 @@ let chart = new Chart(canvas, {
         stacked: true,
       }
     },
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     responsive: true,
-    animations: false,
   },
   scales: {
     x: {
