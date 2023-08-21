@@ -75,7 +75,7 @@ class PostEventProducer(BaseProducer):
         url = "https://omskvelo.ru/api/forums/posts"
         template = "invisionboard_integration/forum_results.html"
 
-        results = Result.objects.filter(event=event)
+        results = Result.objects.filter(event=event).order_by("randonneur__russian_surname","randonneur__russian_name")
         topic = event.omskvelo_xref.split("-")[0].replace("https://omskvelo.ru/topic/", "")
         context = {
             'site': self.site.name,

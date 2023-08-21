@@ -180,6 +180,7 @@ def statistics(request, year='', form="html"):
         def make_plural(cases, number):
             number %= 100
             if number in range(11, 21): return cases[2]
+            if number%10 == 0: return cases[2]
             if number%10 == 1: return cases[0]
             if number%10  < 5: return cases[1]
             return cases[2]
