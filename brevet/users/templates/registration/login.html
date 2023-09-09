@@ -11,6 +11,7 @@
 {% block content %}
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'index' %}" />
     <h3 class="mb-3 fw-normal">Вход</h3>
     {% if form.errors %}
     <p class="mb-2">
