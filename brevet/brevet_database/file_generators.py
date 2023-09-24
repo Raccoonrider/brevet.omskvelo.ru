@@ -288,9 +288,9 @@ def get_yearly_protocol(year, results, club):
     """ Generates yearly protocol for ORVM """
 
     # Preprocessing
-    results_fleche = results.filter(event__route__fleche=True).order_by("event__fleche_team")
-    results = results.filter(event__route__fleche=False).order_by("event__route__distance", "event__date", "randonneur__surname")
     results_abroad = results.filter(event__club__foreign=True).order_by("event__date", "randonneur__surname")
+    results_fleche = results.filter(event__club=club, event__route__fleche=True).order_by("event__fleche_team")
+    results = results.filter(event__club=club, event__route__fleche=False).order_by("event__route__distance", "event__date", "randonneur__surname")
 
     randonneurs = []
     randonneurs_guests = []
@@ -311,9 +311,12 @@ def get_yearly_protocol(year, results, club):
     }
     for result in results:
         event = result.event
-        distance = event.route.distance
-        if event not in events[distance] and event.club == club:
-            events[distance].append(event)
+        if event.route.brm:
+            distance = event.route.distance
+            if event not in events[distance]:
+                events[distance].append(event)
+        elif event.route.lrm:
+            events[1200].append(event)
 
     file = BytesIO()
     filename = f"{year}"
