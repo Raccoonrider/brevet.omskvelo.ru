@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   web:
-    container_name: brevet-web
+    container_name: web
     build: .
     command: sh -c "
       supercronic /home/crontab
@@ -29,7 +29,7 @@ services:
 
 
   db:
-    container_name: brevet-db
+    container_name: db
     image: postgres:14.2-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -43,7 +43,7 @@ services:
 
 
   nginx:
-    container_name: brevet-nginx
+    container_name: nginx
     build: ./nginx
     command: sh -c "certbot --nginx --agree-tos -d brevet.omskvelo.ru --noninteractive"
     volumes:
@@ -51,8 +51,8 @@ services:
       - static:/home/static
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
-      - 80:80
-      - 443:443
+      - 10080:80
+      - 10443:443
     restart: unless-stopped
 
 volumes:
