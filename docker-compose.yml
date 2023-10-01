@@ -58,12 +58,12 @@ services:
     restart: unless-stopped
 
 
-    diploma:
-      container_name: diploma
-      build: ../diploma
-      expose:
-        - 8001
-      restart: unless-stopped
+  diploma:
+    container_name: diploma
+    build: ../diploma
+    expose:
+      - 8001
+    restart: unless-stopped
 
 volumes:
   postgres_data:
