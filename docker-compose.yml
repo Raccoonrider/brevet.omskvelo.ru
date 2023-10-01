@@ -45,7 +45,9 @@ services:
   nginx:
     container_name: nginx
     build: ./nginx
-    command: sh -c "certbot --nginx --agree-tos -d brevet.omskvelo.ru --noninteractive"
+    command: sh -c "
+      certbot --nginx --agree-tos -d brevet.omskvelo.ru --noninteractive 
+      && tail -f /dev/null" 
     volumes:
       - media:/home/brevet/media
       - static:/home/static
