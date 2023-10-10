@@ -1,3 +1,4 @@
+from datetime import timedelta
 from io import BytesIO
 
 import xlsxwriter
@@ -335,9 +336,12 @@ def get_yearly_protocol(year, results, club):
     # Set formats
     text_format = workbook.add_format({'border': True, 'align':'center'})
     name_format = workbook.add_format({'border': True, 'align':'left'})
-    int_format  = workbook.add_format({'border': True, 'align':'center', 'num_format' : '0'})
-    time_format = workbook.add_format({'border': True, 'align':'center', 'num_format' : '[h]:mm;@'})
-    date_format = workbook.add_format({'border': True, 'align':'center', 'num_format' : 'DD.MM;@'})
+    int_format  = workbook.add_format({'border': True, 'align':'center'})
+    time_format = workbook.add_format({'border': True, 'align':'center'})
+    date_format = workbook.add_format({'border': True, 'align':'center'})
+    # ORVM now requires dates and times to be formatted as text. Previous formats:
+    # time_format = workbook.add_format({'border': True, 'align':'center', 'num_format' : '[h]:mm;@'})
+    # date_format = workbook.add_format({'border': True, 'align':'center', 'num_format' : 'DD.MM;@'})
     guest_format = workbook.add_format({'align':'left'})
 
 
@@ -382,7 +386,7 @@ def get_yearly_protocol(year, results, club):
         worksheet.write("C2", club.name, text_format)
         for col, event in enumerate(events[distance], start=6):
             worksheet.write(0, col, event.club.ACP_code, int_format)
-            worksheet.write(1, col, event.date, date_format)
+            worksheet.write(1, col, event.date.strftime("%d.%m"), date_format)
             worksheet.write(2, col, "Результат", text_format)
             worksheet.write(len(randonneurs)+6, col, "Результат", text_format)
 
@@ -399,7 +403,7 @@ def get_yearly_protocol(year, results, club):
                 worksheet.write(row, col, None, time_format)
                 for result in results:
                     if result.randonneur == randonneur and result.event == event:
-                        worksheet.write(row, col, result.time, time_format)
+                        worksheet.write(row, col, format_timedelta(result.time), time_format)
                         break
         
         for row, randonneur in enumerate(randonneurs_guests, start=len(randonneurs)+7):
@@ -414,7 +418,7 @@ def get_yearly_protocol(year, results, club):
                 worksheet.write(row, col, None, time_format)
                 for result in results:
                     if result.randonneur == randonneur and result.event == event:
-                        worksheet.write(row, col, result.time, time_format)
+                        worksheet.write(row, col, format_timedelta(result.time), time_format)
                         break
     
 
@@ -443,7 +447,7 @@ def get_yearly_protocol(year, results, club):
 
     # Write rows
     for row, result in enumerate(results_fleche, start=3):
-        worksheet.write(row, 0, result.event.date, date_format)
+        worksheet.write(row, 0, result.event.date.strftime("%d.%m"), date_format)
         worksheet.write(row, 1, result.event.fleche_name, name_format)
         worksheet.write(row, 2, result.event.fleche_start, text_format)
         worksheet.write(row, 3, result.event.fleche_finish, text_format)
@@ -473,11 +477,11 @@ def get_yearly_protocol(year, results, club):
     for row, result in enumerate(results_abroad, start=3):
         worksheet.write(row, 0, result.randonneur.surname, name_format)
         worksheet.write(row, 1, result.randonneur.name, name_format)
-        worksheet.write(row, 2, result.event.date, date_format)
+        worksheet.write(row, 2, result.event.date.strftime("%d.%m"), date_format)
         worksheet.write(row, 3, result.event.route.distance, int_format)
         worksheet.write(row, 4, result.event.club.country, text_format)
         worksheet.write(row, 5, result.event.club.name, text_format)
-        worksheet.write(row, 6, result.time, time_format)        
+        worksheet.write(row, 6, format_timedelta(result.time), time_format)        
 
 
     workbook.close()
@@ -489,3 +493,9 @@ def get_yearly_protocol(year, results, club):
 
     return response
         
+def format_timedelta(td:timedelta):
+    seconds = int(td.total_seconds())
+    hours = seconds // 3600
+    minutes = seconds // 60 % 60
+
+    return "{:02d}:{:02d}".format(hours, minutes)
