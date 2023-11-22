@@ -25,7 +25,7 @@ class BaseProducer:
         request = Request(url=f"{url}?{query}", data=b'', method='POST')
         request.add_header("Authorization", "Basic %s" % auth_str.decode('ascii'))  
         request.add_header("Content-Length", "0")
-        request.add_header("Host", "omskvelo.ru")
+        request.add_header("Host", settings.INVISIONBOARD_HOST)
         request.add_header("User-Agent", "HTTPie")
 
         try:
@@ -50,7 +50,7 @@ class PostEventProducer(BaseProducer):
             event.save()
 
     def post_event_topic(self, event:Event):
-        url = "https://www.omskvelo.ru/api/forums/topics"
+        url = "https://" + settings.INVISIONBOARD_HOST + "/api/forums/topics"
         forum = 54
         template = "invisionboard_integration/forum_topic.html"
 
@@ -72,11 +72,11 @@ class PostEventProducer(BaseProducer):
     
 
     def post_event_results(self, event:Event):
-        url = settings.INVISIONBOARD_HOST + "/api/forums/posts"
+        url = "https://" + settings.INVISIONBOARD_HOST + "/api/forums/posts"
         template = "invisionboard_integration/forum_results.html"
 
         results = Result.objects.filter(event=event).order_by("randonneur__russian_surname","randonneur__russian_name")
-        topic = event.omskvelo_xref.split("-")[0].replace(settings.INVISIONBOARD_HOST + "/topic/", "")
+        topic = event.omskvelo_xref.split("-")[0].replace("https://" + settings.INVISIONBOARD_HOST + "/topic/", "")
         context = {
             'site': self.site.name,
             'event': event,
@@ -94,7 +94,7 @@ class PostEventProducer(BaseProducer):
 
 
     def post_event_to_calendar(self, event:Event):
-        url = settings.INVISIONBOARD_HOST + "/api/calendar/events"
+        url = "https://" + settings.INVISIONBOARD_HOST + "/api/calendar/events"
         calendar = 6
         template = "invisionboard_integration/forum_topic.html"
 

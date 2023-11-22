@@ -162,7 +162,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost',
                         'https://brevet.omskvelo.ru']
 
 # Invisionboard
-INVISIONBOARD_HOST = 'https://www.omskvelo.ru'
+INVISIONBOARD_HOST = 'www.omskvelo.ru'
 INVISIONBOARD_AUTHOR = 14225
 
 LOGGING = {
