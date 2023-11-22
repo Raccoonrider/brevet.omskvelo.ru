@@ -8,11 +8,11 @@ from base64 import b64encode
 from django.template.loader import render_to_string
 from django.utils.timezone import now, timedelta
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 from brevet_database.models import Event, Result, DEFAULT_CLUB_ID
 
 API_KEY = os.environ.get('INVISION_API_KEY')
-AUTHOR = 14225
 
 
 class BaseProducer:
@@ -50,7 +50,7 @@ class PostEventProducer(BaseProducer):
             event.save()
 
     def post_event_topic(self, event:Event):
-        url = "https://omskvelo.ru/api/forums/topics"
+        url = "https://www.omskvelo.ru/api/forums/topics"
         forum = 54
         template = "invisionboard_integration/forum_topic.html"
 
@@ -65,18 +65,18 @@ class PostEventProducer(BaseProducer):
             'forum': forum,
             'title': title,
             'post': data,
-            'author': AUTHOR,
+            'author': settings.INVISIONBOARD_AUTHOR,
         })
 
         return self.post(url, query)
     
 
     def post_event_results(self, event:Event):
-        url = "https://omskvelo.ru/api/forums/posts"
+        url = settings.INVISIONBOARD_HOST + "/api/forums/posts"
         template = "invisionboard_integration/forum_results.html"
 
         results = Result.objects.filter(event=event).order_by("randonneur__russian_surname","randonneur__russian_name")
-        topic = event.omskvelo_xref.split("-")[0].replace("https://omskvelo.ru/topic/", "")
+        topic = event.omskvelo_xref.split("-")[0].replace(settings.INVISIONBOARD_HOST + "/topic/", "")
         context = {
             'site': self.site.name,
             'event': event,
@@ -86,7 +86,7 @@ class PostEventProducer(BaseProducer):
 
         query = urlencode({
             'topic': int(topic),
-            'author': AUTHOR,
+            'author': settings.INVISIONBOARD_AUTHOR,
             'post': data,
         })
 
@@ -94,7 +94,7 @@ class PostEventProducer(BaseProducer):
 
 
     def post_event_to_calendar(self, event:Event):
-        url = "https://omskvelo.ru/api/calendar/events"
+        url = settings.INVISIONBOARD_HOST + "/api/calendar/events"
         calendar = 6
         template = "invisionboard_integration/forum_topic.html"
 
@@ -110,7 +110,7 @@ class PostEventProducer(BaseProducer):
             'title': title,
             'description': data,
             'start': event.date.isoformat(),
-            'author': AUTHOR,
+            'author': settings.INVISIONBOARD_AUTHOR,
         })
 
         return self.post(url, query)
