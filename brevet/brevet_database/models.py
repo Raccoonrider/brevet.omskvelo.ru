@@ -251,11 +251,12 @@ class PersonalStatsChart(AbstractModel):
             })    
 
             distance = self.randonneur.get_total_distance(year=year)
-            self.distance.append({
-                'x': distance,
-                'y': year,
-                'label': f"{distance} км" ,
-            })
+            if distance:
+                self.distance.append({
+                    'x': distance,
+                    'y': year,
+                    'label': f"{distance} км" ,
+                })
 
         self.save()
 
