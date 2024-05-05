@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import logging
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -60,6 +61,7 @@ class PostEventProducer(BaseProducer):
             'event': event
         }
         data = render_to_string(template, context)
+        data = re.sub(" {2,}", "", data) # Remove extra spaces to avoid HTTP414 URL too long
 
         query = urlencode({
             'forum': forum,
@@ -82,7 +84,8 @@ class PostEventProducer(BaseProducer):
             'event': event,
             'results': results,
         }
-        data = render_to_string(template, context)        
+        data = render_to_string(template, context)     
+        data = re.sub(" {2,}", "", data) # Remove extra spaces to avoid HTTP414 URL too long
 
         query = urlencode({
             'topic': int(topic),
@@ -104,6 +107,7 @@ class PostEventProducer(BaseProducer):
             'event': event
         }
         data = render_to_string(template, context)
+        data = re.sub(" {2,}", "", data) # Remove extra spaces to avoid HTTP414 URL too long
 
         query = urlencode({
             'calendar': calendar,
