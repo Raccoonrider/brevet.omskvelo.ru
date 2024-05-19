@@ -29,6 +29,13 @@
             {% if sr %}
                 <h5 class="text-muted" >Суперрандоннёр: {{ sr }} </h5>
             {% endif %}
+            {% if user.is_superuser %}
+                <h5 class="text-muted">Телефон: 
+                    {% with randonneur.user_set.first.phone_number as tel %}
+                        <a href="tel:{{tel}}">{{tel}}</a>
+                    {% endwith %}
+                </h5>
+            {% endif %}
         </div>
 
         {% if chart_distance and chart_milestones %}
