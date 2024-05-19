@@ -22,19 +22,22 @@
 
     {% if results %}
         <div class="py-4">
-            <h5 class="text-muted">Общая дистанция: {{ total_distance }} км</h5>
-            <h5 class="text-muted">Всего бреветов: {{ total_brevets }} </h5>
-            <h5 class="text-muted">Первое участие: {{ first_brevet.get_date }} {{ first_brevet.event.route.distance }} км <a href = "{{ first_brevet.event.get_absolute_url }}">{{ first_brevet.event.route.name }}</a></h5>
-            <!-- <h5 class="text-muted">Годы активности: {{ years_active }} </h5> -->
-            {% if sr %}
-                <h5 class="text-muted" >Суперрандоннёр: {{ sr }} </h5>
-            {% endif %}
             {% if user.is_superuser %}
-                <h5 class="text-muted">Телефон: 
+                <h5>Телефон:
                     {% with randonneur.user_set.first.phone_number as tel %}
-                        <a href="tel:{{tel}}">{{tel}}</a>
+                        <span class="text-muted"><a href="tel:{{tel}}">{{tel}}</a></span>
                     {% endwith %}
                 </h5>
+            {% endif %}
+                <h5>Общая дистанция: <span class="text-muted">{{ total_distance }} км</span></h5>
+                <h5>Всего бреветов: <span class="text-muted">{{ total_brevets }} </span></h5>
+            {% if randonneur.club_id != 1 %}
+                <h5>Клуб: <span class="text-muted">{{ randonneur.club }}</span></h5>
+            {% else %}
+                <h5>Первое участие: <span class="text-muted">{{ first_brevet.get_date }} {{ first_brevet.event.route.distance }} км <a href = "{{ first_brevet.event.get_absolute_url }}">{{ first_brevet.event.route.name }}</a></span></h5>
+            {% endif %}
+            {% if sr %}
+                <h5>Суперрандоннёр: <span class="text-muted">{{ sr }} </span></h5>
             {% endif %}
         </div>
 
