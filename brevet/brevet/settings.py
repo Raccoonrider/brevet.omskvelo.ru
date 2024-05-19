@@ -18,8 +18,9 @@ SITE_ID = 2
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
+    'users',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -27,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     "debug_toolbar",
     'brevet',
-    'users',
     'brevet_database',
     'search',
     'hosting_manager',
