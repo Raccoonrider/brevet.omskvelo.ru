@@ -796,7 +796,7 @@ def personal_stats(request, surname=None, name=None, uid=None, form="html"):
 def index(request):
 
     # Select latest finished events (there can be more than one event on a single date)
-    finished_events = Event.objects.filter(finished=True).order_by("-date")
+    finished_events = Event.objects.filter(finished=True, club_id=DEFAULT_CLUB_ID).order_by("-date")
     prev_event_date = finished_events[0].date
     prev_events = []
     for event in finished_events:
