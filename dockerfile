@@ -29,7 +29,3 @@ RUN pipenv install --deploy --system
 # Install application
 COPY . .
 RUN chmod 0644 crontab
-
-# Create user and set ownership
-RUN addgroup -S  brevet && adduser -S brevet -G brevet && chown -R brevet:brevet .
-USER brevet
