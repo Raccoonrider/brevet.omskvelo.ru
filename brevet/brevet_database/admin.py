@@ -60,7 +60,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     model = Application
     raw_id_fields = ['result']
     autocomplete_fields = ['user', 'event']
-    search_fields = ('user__last_name', 'event__route')
+    search_fields = ('user__last_name', 'event__route__name')
     list_display = ('user__name', 'event', 'active')
     list_filter = ('active', 'dnf', 'dns', 'dsq', 'otl', 'payment')
 
