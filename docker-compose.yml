@@ -49,7 +49,7 @@ services:
       certbot --nginx --agree-tos -d brevet.omskvelo.ru --noninteractive 
       && tail -f /dev/null" 
     volumes:
-      - media:/home/brevet/media
+      - media:/home/media
       - static:/home/static
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
