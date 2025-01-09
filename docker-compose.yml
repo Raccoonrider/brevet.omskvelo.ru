@@ -67,7 +67,7 @@ services:
 
   tus1300:
     container_name: tus1300
-    build: ../tus1300
+    build: ./tus1300
     command: sh -c "cd /home/app
       && python manage.py migrate
       && python manage.py collectstatic --noinput
