@@ -1,0 +1,3 @@
+[submodule "tus1300"]
+	path = tus1300
+	url = git@github.com:Raccoonrider/TUS1300.git
