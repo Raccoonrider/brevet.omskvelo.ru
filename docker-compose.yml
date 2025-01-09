@@ -65,6 +65,29 @@ services:
       - 8001
     restart: unless-stopped
 
+  tus1300:
+    container_name: tus1300
+    build: ../tus1300
+    command: sh -c "cd /home/app
+      && python manage.py migrate
+      && python manage.py collectstatic --noinput
+      && gunicorn app.wsgi --bind 0.0.0.0:8002 --timeout 100 --workers=3"
+    volumes:
+      - media:/home/app/media
+      - static:/home/app/staticfiles
+    expose:
+      - 8002
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   media:
