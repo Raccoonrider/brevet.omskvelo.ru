@@ -381,13 +381,16 @@ class Event(AbstractModel):
         return reverse("protocol_upload_success", kwargs={'event_id': self.pk})
 
     def get_applications(self):
-        return Application.objects.filter(event=self, active=True).order_by(
+        return Application.objects.filter(
+            event=self, 
+            active=True,
+            ).order_by(
             'dns',
             'dnf',
             'otl',
             'dsq',
-            'result__is_null',
             'date',
+            'result',
         )
 
     def get_applicants(self):
