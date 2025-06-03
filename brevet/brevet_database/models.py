@@ -345,6 +345,7 @@ class Event(AbstractModel):
     lights_required = models.BooleanField(default=False, verbose_name="Свет обязателен")
     club = models.ForeignKey(Club, on_delete=models.PROTECT, default=DEFAULT_CLUB_ID, verbose_name="Клуб")
     responsible = models.CharField(max_length=50, blank=True, verbose_name="Ответственный")
+    registration_closed = models.BooleanField(default=False, verbose_name="Регистрация закрыта")
     finished = models.BooleanField(default=False, verbose_name="Завершен")
     omskvelo_xref = models.URLField(blank=True, verbose_name="Ссылка на форум")
     external_xref = models.URLField(blank=True, verbose_name="Внешний ресурс")
@@ -407,6 +408,9 @@ class Event(AbstractModel):
         return datetime_start < datetime.now()
 
     def application_allowed(self):
+        if self.registration_closed:
+            return False
+        
         timedelta_block = timedelta(hours = 12)
         datetime_start = datetime.combine(self.date, self.time)
         return datetime_start - timedelta_block > datetime.now()
