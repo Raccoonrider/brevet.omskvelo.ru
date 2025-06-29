@@ -25,9 +25,12 @@
         <img src="{% static 'brevet/svg/username.svg' %}"/>
         {{ user.get_display_name }}
       </a>
-      <a class="btn btn-light my-2" href="{% url 'logout' %}" aria-label="Выйти">
-        <img src="{% static 'brevet/svg/logout.svg' %}"/>
-      </a>
+      <form action="{% url 'logout' %}" method="post">
+        <button type="submit" class="btn btn-light my-2" aria-label="Выйти">
+          {% csrf_token %}
+          <img src="{% static 'brevet/svg/logout.svg' %}"/>
+        </button>
+      </form>
     {% else %}
       <a class="btn btn-light" href="{% url 'login' %}">
         <img src="{% static 'brevet/svg/login.svg' %}"/>
