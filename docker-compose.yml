@@ -41,6 +41,16 @@ services:
       retries: 30
     restart: unless-stopped
 
+  pg-backup:
+    container_name: pg-backup
+    image: eeshugerman/postgres-backup-s3:14
+    env_file: pg-backup.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    restart: unless-stopped
 
   nginx:
     container_name: nginx

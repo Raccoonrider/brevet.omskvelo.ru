@@ -169,7 +169,7 @@ activate/
 etc/
 
 # Credentials
-.env
+*.env
 
 # Database dump
 dump.json
