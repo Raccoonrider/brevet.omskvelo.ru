@@ -857,7 +857,7 @@ def sr_request(request, year):
                     entry[1][distance] = result
                     break
   
-        data = [x for x in data if distance in entry[1]]
+        data = [entry for entry in data if distance in entry[1]]
         data.sort(key=lambda x: x[0].surname)
 
     response = file_generators.get_sr_request(data, year) 
