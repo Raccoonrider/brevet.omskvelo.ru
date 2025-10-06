@@ -25,6 +25,7 @@ urlpatterns = [
     path("protocol/<int:event_id>/", views.protocol, name="protocol"),
     path("protocol/<int:event_id>/<str:form>", views.protocol, name="protocol_f"),
     path("protocol/yearly/<int:year>", views.protocol_yearly, name="protocol_yearly"),
+    path("protocol/sr/<int:year>", views.sr_request, name="sr_request"),
 
     path("routes/", views.route_index, name="route_index"), 
     path("routes/<int:distance>/", views.route_index, name="route_index_distance"),
@@ -42,7 +43,6 @@ urlpatterns = [
     path("stats/club/<int:year>/", views.statistics, name="statistics"),
     path("stats/club/<str:form>/", views.statistics, name="statistics_default_f"),    
     path("stats/club/<int:year>/<str:form>/", views.statistics, name="statistics_f"),
-    path("stats/club/<int:year>/sr/", views.sr_request, name="sr_request"),
     path("hx/stats/club/total", views.hx_statistics, name="hx_statistics_total"),
     path("hx/stats/club/<int:year>", views.hx_statistics, name="hx_statistics"),
     path("hx/stats/club/distance_rating/", views.hx_statistics_distance_rating, name="hx_statistics_distance_rating_total"),
