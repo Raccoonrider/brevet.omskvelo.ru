@@ -522,10 +522,8 @@ def get_sr_request(data, year):
 
     # Set colomn width
     worksheet.set_column(0,0, width=12)
-    worksheet.set_column(1,1, width=19)
-    worksheet.set_column(2,2, width=12)
-    worksheet.set_column(3,3, width=15)
-    worksheet.set_column(4,8, width=12)
+    worksheet.set_column(1,1, width=30)
+    worksheet.set_column(2,2, width=40)
 
     # Write static data
     worksheet.write(0, 1, "AUDAX CLUB PARISIEN", header_format)
