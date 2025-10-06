@@ -543,7 +543,7 @@ def get_sr_request(data, year):
     for row, entry in enumerate(data, start=2):
         worksheet.write(row, 0, row-1, text_format)
         worksheet.write(row, 1, f"{entry[0].surname} {entry[0].name}", name_format)
-        worksheet.write(row, 2, f"{entry[0].club.name}")
+        worksheet.write(row, 2, f"{entry[0].club.french_name} {entry[0].club.ACP_code}")
         worksheet.write(row, 3, entry[1][200].homologation, number_format)
         worksheet.write(row, 4, entry[1][300].homologation, number_format)
         worksheet.write(row, 5, entry[1][400].homologation, number_format)

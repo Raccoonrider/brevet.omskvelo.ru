@@ -25,7 +25,7 @@ urlpatterns = [
     path("protocol/<int:event_id>/", views.protocol, name="protocol"),
     path("protocol/<int:event_id>/<str:form>", views.protocol, name="protocol_f"),
     path("protocol/yearly/<int:year>", views.protocol_yearly, name="protocol_yearly"),
-    path("protocol/sr/<int:year>", views.sr_request, name="sr_request"),
+    path("protocol/sr/<int:year>/", views.sr_request, name="sr_request"),
 
     path("routes/", views.route_index, name="route_index"), 
     path("routes/<int:distance>/", views.route_index, name="route_index_distance"),

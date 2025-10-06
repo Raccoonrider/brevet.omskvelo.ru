@@ -840,7 +840,7 @@ def index(request):
 @never_cache
 def sr_request(request, year):
     """Make SR request form with ALL eligible candidates, remove as needed by hand"""
-    year_results = Result.objects.filter(event__date__year=year)
+    year_results = Result.objects.filter(event__date__year=year).exclude(homologation=None).order_by('event__date')
 
     data = []
 
