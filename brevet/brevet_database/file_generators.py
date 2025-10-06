@@ -492,10 +492,70 @@ def get_yearly_protocol(year, results, club):
     file.close()
 
     return response
-        
+
 def format_timedelta(td:timedelta):
     seconds = int(td.total_seconds())
     hours = seconds // 3600
     minutes = seconds // 60 % 60
 
     return "{:02d}:{:02d}".format(hours, minutes)
+
+
+def get_sr_request(data, year):
+    """Generates SR request form for ACP"""
+    file = BytesIO()
+    workbook = xlsxwriter.Workbook(file,  {'in_memory': True})
+    worksheet = workbook.add_worksheet(f"Worksheet")
+
+    # Set formats
+
+    header_format = workbook.add_format({
+        'border': True, 
+        'align':'left',
+        'bold': True,
+        'font_color': "#000080",
+        'font_size': 14,
+    })
+    text_format = workbook.add_format({'border': True, 'align':'center'})
+    number_format = workbook.add_format({'border': True, 'align':'left'})
+    name_format = workbook.add_format({'border': True, 'align':'left'})
+
+    # Set colomn width
+    worksheet.set_column(0,0, width=12)
+    worksheet.set_column(1,1, width=19)
+    worksheet.set_column(2,2, width=12)
+    worksheet.set_column(3,3, width=15)
+    worksheet.set_column(4,8, width=12)
+
+    # Write static data
+    worksheet.write(0, 1, "AUDAX CLUB PARISIEN", header_format)
+    worksheet.write(0, 3, "SUPER RANDONNEUR", header_format)
+
+    worksheet.write(1, 0, "N°", text_format)
+    worksheet.write(1, 1, "Nome", text_format)
+    worksheet.write(1, 2, "Club", text_format)
+    worksheet.write(1, 3, "200", text_format)
+    worksheet.write(1, 4, "300", text_format)
+    worksheet.write(1, 5, "400", text_format)
+    worksheet.write(1, 6, "600", text_format)
+
+    # Write results data
+    for row, entry in enumerate(data, start=2):
+        worksheet.write(row, 0, row-1, text_format)
+        worksheet.write(row, 1, f"{entry[0].surname} {entry[0].name}", name_format)
+        worksheet.write(row, 2, f"{entry[0].club.name}")
+        worksheet.write(row, 3, entry[1][200], number_format)
+        worksheet.write(row, 4, entry[1][300], number_format)
+        worksheet.write(row, 5, entry[1][400], number_format)
+        worksheet.write(row, 6, entry[1][600], number_format)
+
+    workbook.close()
+    file.seek(0)
+
+    filename = f"SR-{year}.xlsx"
+
+    response = HttpResponse(file, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = f"attachment; filename={filename}"
+    file.close()
+
+    return response

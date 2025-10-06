@@ -42,6 +42,7 @@ urlpatterns = [
     path("stats/club/<int:year>/", views.statistics, name="statistics"),
     path("stats/club/<str:form>/", views.statistics, name="statistics_default_f"),    
     path("stats/club/<int:year>/<str:form>/", views.statistics, name="statistics_f"),
+    path("stats/club/<int:year>/sr/", views.sr_request, name="sr_request"),
     path("hx/stats/club/total", views.hx_statistics, name="hx_statistics_total"),
     path("hx/stats/club/<int:year>", views.hx_statistics, name="hx_statistics"),
     path("hx/stats/club/distance_rating/", views.hx_statistics_distance_rating, name="hx_statistics_distance_rating_total"),
@@ -54,5 +55,6 @@ urlpatterns = [
     path("stats/user/<int:uid>/<str:form>/", views.personal_stats, name="personal_stats_f"), 
     path("stats/user/<str:surname>_<str:name>/", views.personal_stats, name="person_by_name"), 
     path("hx/stats/user/<int:line>/", views.hx_personal_stats_page, name = "hx_personal_stats_page"),
+
 
 ]

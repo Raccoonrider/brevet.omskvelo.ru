@@ -836,3 +836,29 @@ def index(request):
         'prev_events' : prev_events,
     }
     return render(request, "brevet_database/index.html", context)
+
+@never_cache
+def sr_request(request, year):
+    """Make SR request form with ALL eligible candidates, remove as needed by hand"""
+    year_results = Result.objects.filter(event__date__year=year)
+
+    data = []
+
+    for distance in 600, 400, 300, 200:
+        results_ = year_results.filter(event__route__distance=distance)
+
+        if distance == 600:
+            for result in results_:
+                data.append([result.randonneur, dict()])
+
+        for result in results_:
+            for entry in data:
+                if entry[0] == result.randonneur and distance not in entry[1]:
+                    entry[1][distance] = result
+                    break
+  
+        data = [x for x in data if distance in entry[1]]
+        data.sort(key=lambda x: x[0].surname)
+
+    response = file_generators.get_sr_request(data, year) 
+    return response
