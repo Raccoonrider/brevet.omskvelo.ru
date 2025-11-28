@@ -11,6 +11,7 @@ class MedalAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'get_event_date', 'payment', 'is_ordered', 'is_received', 'is_removed',)
     list_filter = ('payment',)
     sortable_by = ('__str__', 'get_event_date', 'payment', 'is_ordered', 'is_received', 'is_removed',)
+    actions = ('action_order', 'action_receive', 'action_payment', 'action_remove')
 
     @admin.display(description="Заказана", boolean=True)
     def is_ordered(self, instance:Medal):
@@ -49,8 +50,6 @@ class MedalAdmin(admin.ModelAdmin):
                 messages.SUCCESS,
             )
     
-
-    
     @admin.action(description="Отметить заказ")
     def action_order(self, request, queryset):
         def action(item:Medal):
@@ -66,7 +65,7 @@ class MedalAdmin(admin.ModelAdmin):
 
 
     @admin.action(description="Отметить приём")
-    def action_order(self, request, queryset):
+    def action_receive(self, request, queryset):
         def action(item:Medal):
             if item.received is None:
                 item.received = timezone.now()
@@ -80,7 +79,7 @@ class MedalAdmin(admin.ModelAdmin):
     
 
     @admin.action(description="Отметить оплату")
-    def action_order(self, request, queryset):
+    def action_payment(self, request, queryset):
         def action(item:Medal):
             if not item.payment:
                 item.payment = True
@@ -94,7 +93,7 @@ class MedalAdmin(admin.ModelAdmin):
     
 
     @admin.action(description="Отметить вручение")
-    def action_order(self, request, queryset):
+    def action_remove(self, request, queryset):
         def action(item:Medal):
             if item.removed is None:
                 item.removed = timezone.now()
