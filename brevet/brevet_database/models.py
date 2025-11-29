@@ -66,6 +66,7 @@ class Randonneur(AbstractModel):
     sr = models.JSONField(null=True, blank=True, default=dict, verbose_name="Суперрандоннёр")
     total_distance = models.IntegerField(default=0, verbose_name="Общая дистанция")
     total_brevets = models.IntegerField(default=0, verbose_name="Всего бреветов")
+    friends = models.ManyToManyField(to='self', verbose_name="Друзья")
 
     class Meta:
         ordering = ['russian_surname']
@@ -164,6 +165,7 @@ class Randonneur(AbstractModel):
 
         return True
 
+    @staticmethod
     def from_user(user):
         r = Randonneur()
         r.russian_name = user.first_name
@@ -177,6 +179,29 @@ class Randonneur(AbstractModel):
     
     def translit(self):
         return f"{self.surname} {self.name}"
+    
+    def update_friends(self, year:int=None):
+        if year is None:
+            for year in self.get_active_years():
+                self.update_friends(year)
+            return
+        
+        min_friends_score = 120
+        
+        
+        results = Result.objects.filter(randonneur=self, event__date__year=year)
+        scores = {}
+        for result in results:
+            for key, value in result.get_friend_scores().items():
+                scores[key] = scores.get(key, [])
+                scores[key].append(value)
+
+        for key, value in scores.items():
+            if sum(value) >= min_friends_score:
+                randonneur = Randonneur.objects.get(pk=key)
+                self.friends.add(randonneur)
+                print(F"{self} and {randonneur} are friends!")
+
 
 
 class PersonalStatsChart(AbstractModel):
@@ -530,6 +555,7 @@ def update_randonneur_stats(sender, instance:Event, created, **kwargs):
 
         for randonneur in randonneurs:
             randonneur.update_stats()
+            randonneur.update_friends()
             try:
                 chart = PersonalStatsChart.objects.get(randonneur=randonneur)
             except ObjectDoesNotExist:
@@ -547,20 +573,17 @@ def update_randonneur_stats(sender, instance:Event, created, **kwargs):
         try:
             stats = ClubStatsCache.objects.get(year=instance.date.year)
         except ObjectDoesNotExist:
-            stats = ClubStatsCache()
-            stats.year = instance.date.year
+            stats = ClubStatsCache(year=instance.date.year)
         stats.refresh()
         stats = ClubStatsCache.objects.get(year__isnull=True)
         stats.refresh()
-
-
 
 
 class Result(AbstractModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name="Бревет")
     homologation = models.CharField(max_length=50, blank=True, verbose_name="№ омологации") 
     randonneur = models.ForeignKey(Randonneur, on_delete=models.CASCADE, verbose_name="Рандоннёр") 
-    time = models.DurationField(blank=True, verbose_name="Время")
+    time = models.DurationField(verbose_name="Время")
     medal = models.BooleanField(default=False, verbose_name="Медаль")
 
     class Meta:
@@ -576,6 +599,31 @@ class Result(AbstractModel):
 
     def __str__(self):
         return f"{self.get_date()} {self.event.route.distance} км {self.randonneur} {self.get_time()}"
+    
+    def get_friend_scores(self):
+        results = Result.objects.filter(event=self.event).exclude(id=self.id)
+        scores = {}
+        for other in results:
+            score = self.calc_friend_score(other)
+            if score:
+                scores[other.randonneur_id] = score
+        return scores
+
+    def calc_friend_score(self, other:'Result'):
+        if self.id == other.id:
+            return 0
+        
+        if self.event != other.event:
+            return 0
+
+        a, b = min(self.time, other.time).total_seconds(), max(self.time, other.time).total_seconds()
+        delta = b - a
+        max_delta = min(2 * 3600, 0.05 * b) # seconds
+
+        if delta < max_delta:
+            return round(100 * (max_delta - delta) / max_delta)
+        return 0
+
 
 
 class Application(AbstractModel):

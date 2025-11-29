@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 from django.db import models
@@ -564,7 +565,10 @@ def event_finalize(request, event_id=None):
     assert event.ready_to_finalize()
     event.finished = True
     event.save()
-    PostEventProducer().post_event_results(event)
+    try:
+        PostEventProducer().post_event_results(event)
+    except Exception:
+        logging.exception("Failed to post event results")
     return redirect(request.META.get('HTTP_REFERER'))
     
 @never_cache

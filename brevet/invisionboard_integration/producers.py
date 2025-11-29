@@ -17,7 +17,9 @@ API_KEY = os.environ.get('INVISION_API_KEY')
 
 
 class BaseProducer:
-    site = Site.objects.get_current()
+    def __init__(self, *args, **kwargs):
+        self.site = Site.objects.get_current()
+        super().__init__(*args, **kwargs)
 
     def post(self, url:str, query:str):
 

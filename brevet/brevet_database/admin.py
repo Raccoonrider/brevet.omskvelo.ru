@@ -43,6 +43,8 @@ class RandonneurAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'translit')
     list_filter = ('female', 'club',)
     ordering = ('surname', 'name')
+    autocomplete_fields = ('friends',)
+    filter_horizontal = ('friends',)
 
     def response_change(self, request, obj):
         if "_update_stats" in request.POST:
@@ -54,6 +56,7 @@ class RandonneurAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(".")
 
         return super().response_change(request, obj)
+
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):

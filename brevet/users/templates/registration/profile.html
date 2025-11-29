@@ -77,6 +77,17 @@
     </ul>
 {% endif %}
 
-
+{% if user.randonneur.friends %}
+    <h2 class="my-3">Друзья-попутчики</h2>
+    <ul>
+        {% for friend in user.randonneur.friends.all %}
+        <li>
+            <a href="{{ friend.get_absolute_url }}">
+                {{ friend }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
 {% endblock %}
