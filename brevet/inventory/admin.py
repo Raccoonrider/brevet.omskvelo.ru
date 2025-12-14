@@ -4,12 +4,49 @@ from django.contrib import messages
 
 from inventory.models import Medal, Price
 
+class DistanceFilter(admin.SimpleListFilter):
+    title = "Дистанция"
+    parameter_name = 'event_distance'
+
+    def lookups(self, request, model_admin):
+        return (
+            ("200", "200"), 
+            ("300", "300"), 
+            ("400", "400"), 
+            ("600", "600"), 
+            ("1000", "1000"), 
+            ("1200+", "1200+"), 
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == "1200+":
+            queryset = queryset.filter(event__route__lrm=True)
+        elif self.value():
+            queryset = queryset.filter(event__route__distance=self.value())
+        return queryset.all()
+
+
+class YearFilter(admin.SimpleListFilter):
+    title = "Год"
+    parameter_name = 'event_year'
+
+    def lookups(self, request, model_admin):
+        qs = Medal.objects.order_by('-event__date__year').distinct('event__date__year')
+        return tuple((x.event.date.year, x.event.date.year) for x in qs)
+
+    def queryset(self, request, queryset):
+        if self.value():
+            queryset = queryset.filter(event__date__year=self.value())
+        return queryset.all()
+
+
+
 @admin.register(Medal)
 class MedalAdmin(admin.ModelAdmin):
     autocomplete_fields = ('randonneur',)
     search_fields = ('randonneur__russian_surname',)
     list_display = ('__str__', 'get_event_date', 'payment', 'is_ordered', 'is_received', 'is_removed',)
-    list_filter = ('payment',)
+    list_filter = ('payment', DistanceFilter, YearFilter)
     sortable_by = ('__str__', 'get_event_date', 'payment', 'is_ordered', 'is_received', 'is_removed',)
     actions = ('action_order', 'action_receive', 'action_payment', 'action_remove')
 
