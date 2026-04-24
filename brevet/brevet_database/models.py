@@ -66,7 +66,7 @@ class Randonneur(AbstractModel):
     sr = models.JSONField(null=True, blank=True, default=dict, verbose_name="Суперрандоннёр")
     total_distance = models.IntegerField(default=0, verbose_name="Общая дистанция")
     total_brevets = models.IntegerField(default=0, verbose_name="Всего бреветов")
-    friends = models.ManyToManyField(to='self', verbose_name="Друзья")
+    friends = models.ManyToManyField(to='self', blank=True, verbose_name="Друзья")
 
     class Meta:
         ordering = ['russian_surname']
